@@ -56,12 +56,114 @@ function renderLicenseSection(license) {
     \n${section}`
     }
   }
-
-// TODO: Create a function to generate markdown for README
-function generateMarkdown(data) {
-  return `# ${data.title}
-
-`;
-}
-
-module.exports = generateMarkdown;
+  function renderDescriptionSection(screenshot, section){
+    if (screenshot === '' && section === ''){
+      return '';
+      } else {
+        let description = `## Description
+        \n${section}`
+        if (screenshot!== ''){
+          description +=  `\n\n![Screenshot](assets/${screenshot})`
+        }
+        return description;
+    
+    }
+  }
+  
+  function renderLiveLink(link){
+    console.log(link);
+    if (link === ''){
+      return '';
+    } else {
+      return `[Live Link](${link}`
+  }}
+  
+  function renderQuestions(email, github, repo){
+    if (email === '' && github === '' && repo === ''){
+      console.log('No questions rendered');
+      return '';
+    } else {
+      let questions = `## Questions`
+      if (email!== ''){
+        questions += `\n- [Email](mailto:${email})`
+      }
+      if (github!== ''){
+        questions += `\n- [GitHub](https://github.com/${github})`
+      }
+      if (repo!== ''){
+        questions += `\n- [Repository](${repo})`
+      }
+      return questions;
+    }
+  }
+  
+  function renderTableofContents(description, installation, usage, license, tests, contribution, email, github, repo, screenshot) {
+    if (installation === '' && usage === '' && description === '' && license === 'None' && tests === '' && contribution === '' && email === '' && github === '' && repo === '' && screenshot === '') {
+      console.log('No table of contents rendered');
+      return '';
+    } else {
+      let tableofContents = `## Table of Contents`;
+      if (description !== '' || screenshot !== '') {
+        tableofContents += `\n- [Description](#description)`;
+      }
+      if (installation !== '') {
+        tableofContents += `\n- [Installation](#installation)`;
+      }
+      if (usage !== '') {
+        tableofContents += `\n- [Usage](#usage)`;
+      }
+      if (license !== 'None') {
+        tableofContents += `\n- [License](#license)`;
+      }
+      if (contribution !== '') {
+        tableofContents += `\n- [Contributing](#contributing)`;
+      }
+      if (tests !== '') {
+        tableofContents += `\n- [Tests](#tests)`;
+      }
+      if (email !== '' || github !== '' || repo !== '') {
+        tableofContents += `\n- [Questions](#questions)`;
+      }
+      return tableofContents;
+    }
+  }
+  
+  
+  // TODO: Create a function to generate markdown for README
+  const generateMarkdown = ({title, livelink, screenshot, description, installation, usage, contribution, tests, license, github, email, repo}) => { 
+    const liveLink = renderLiveLink(livelink)
+    const licenseBadge = renderLicenseBadge(license);
+    const descriptionSection = renderDescriptionSection(screenshot,description);
+    const installationSection = renderSection('Installation',installation);
+    const usageSection = renderSection('Usage',usage);
+    const contributionSection = renderSection('Contributing',contribution);
+    const testsSection = renderSection('Tests',tests);
+    const tableofContents = renderTableofContents(description, installation, usage, license, tests, contribution, email, github, repo);
+    const licenseSection = renderLicenseSection(license);
+    const questions = renderQuestions(email, github, repo);
+  
+  
+    return `# ${title} 
+    ${licenseBadge}
+  
+  ${liveLink}
+  
+  ${tableofContents}
+  
+  ${descriptionSection}
+  
+  ${installationSection}
+  
+  ${usageSection}
+  
+  ${licenseSection}
+  
+  ${contributionSection}
+  
+  ${testsSection}
+  
+  ${questions}`
+  }
+  
+  
+  module.exports = {generateMarkdown};
